@@ -201,7 +201,7 @@ const data = {
       ukuran: '2m x 1,5m',
     },
   ],
-  product1: [
+  products1: [
     {
       name: 'Contoh Bunga Rotan 1',
       pid: 'Bunga-Rotan-1',

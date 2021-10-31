@@ -1,3 +1,4 @@
+// import data from '../utils/data';
 import { 
   Button,
   Card, 
@@ -11,9 +12,11 @@ import {
 } from "@material-ui/core";
 import NextLink from 'next/link';
 import Layout from "../components/Layout";
-import data from '../utils/data';
+import db from "../utils/db";
+import Product2 from "../models/Product2";
 
-export default function bungarotan() {
+export default function bungarotan(props) {
+  const { products1 } = props;
   return (
     <Layout>
       <div>
@@ -26,26 +29,26 @@ export default function bungarotan() {
         </NextLink>
         <h1>Bunga Rotan</h1>
         <Grid container spacing={3}>
-          {data.product1.map((product) => (
+          {products1.map((product0) => (
             <Grid 
               item 
               md={4} 
-              key={product.name}
+              key={product0.name}
             >
               <Card>
-                <NextLink href={`/product2/${product.pid}`} passHref>
+                <NextLink href={`/product2/${product0.pid}`} passHref>
                   <CardActionArea>
                     <CardMedia 
                       component="img"
-                      image={product.image}
-                      title={product.name}
+                      image={product0.image}
+                      title={product0.name}
                     ></CardMedia>
                     <CardContent>
                       <Typography>
-                        {product.name}
+                        {product0.name}
                       </Typography>
                       <Typography>
-                        Rp.{product.price}
+                        Rp.{product0.price}
                       </Typography>
                     </CardContent>
                   </CardActionArea>
@@ -66,4 +69,15 @@ export default function bungarotan() {
       </div>
     </Layout>
   );
+}
+
+export async function getServerSideProps() {
+  await db.connect();
+  const products1 = await Product2.find({}).lean();
+  await db.disconnect();
+  return {
+    props:{
+      products1: products1.map(db.convertDocToObj),
+    },
+  };
 }

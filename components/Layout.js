@@ -10,7 +10,8 @@ import {
   Switch, 
   ThemeProvider, 
   Toolbar, 
-  Typography 
+  Typography,
+  Badge, 
 } from '@material-ui/core';
 import useStyles from '../utils/styles';
 import { Store } from '../utils/Store';
@@ -19,7 +20,7 @@ import Cookies from 'js-cookie';
 
 export default function Layout({ title, description, children }) {
   const { state, dispatch } = useContext ( Store );
-  const { darkMode } = state;
+  const { darkMode, cart } = state;
   const theme = createMuiTheme({
     typography: {
       h1: {
@@ -73,7 +74,15 @@ export default function Layout({ title, description, children }) {
             <div>
               <Switch checked={darkMode} onChange={darkModeChangeHandler}></Switch>
               <NextLink href="/cart" passHref>
-                <Link>Cart</Link>
+                <Link>
+                  {cart.cartItems.length > 0 ? (
+                    <Badge 
+                      color = "secondary"
+                      badgeContent={cart.cartItems.length}>Cart</Badge>
+                  ) : ( 
+                    "Cart" 
+                  )}
+                </Link>
               </NextLink>
               <NextLink href="/bungapapan" passHref>
                 <Link>Bunga Papan</Link>

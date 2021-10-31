@@ -1,3 +1,4 @@
+// import data from "../utils/data";
 import { 
   Button,
   Card,
@@ -10,15 +11,19 @@ import {
 } from "@material-ui/core";
 import NextLink from 'next/link';
 import Layout from "../components/Layout";
-import data from "../utils/data";
+import db from "../utils/db";
+import Product from "../models/Product";
+import Product2 from "../models/Product2";
 
-export default function Home() {
+export default function Home(props) {
+  const { products } = props;
+  const { products1 } = props;
   return (
     <Layout>
       <div>
         <h1>Bunga Papan</h1>
         <Grid container spacing={3}>
-          {data.products.map((product) => (
+          {products.map((product) => (
             <Grid 
               item 
               md={4} 
@@ -57,26 +62,26 @@ export default function Home() {
         </Grid>
         <h1>Bunga Rotan</h1>
         <Grid container spacing={3}>
-          {data.product1.map((product) => (
+          {products1.map((product0) => (
             <Grid 
               item 
               md={4} 
-              key={product.name}
+              key={product0.name}
             >
               <Card>
-                <NextLink href={`/product2/${product.pid}`} passHref>
+                <NextLink href={`/product2/${product0.pid}`} passHref>
                   <CardActionArea>
                     <CardMedia 
                       component="img"
-                      image={product.image}
-                      title={product.name}
+                      image={product0.image}
+                      title={product0.name}
                     ></CardMedia>
                     <CardContent>
                       <Typography>
-                        {product.name}
+                        {product0.name}
                       </Typography>
                       <Typography>
-                        Rp.{product.price}
+                        Rp.{product0.price}
                       </Typography>
                     </CardContent>
                   </CardActionArea>
@@ -100,7 +105,18 @@ export default function Home() {
   )
 }
 
-
+export async function getServerSideProps() {
+  await db.connect();
+  const products = await Product.find({}).lean();
+  const products1 = await Product2.find({}).lean();
+  await db.disconnect();
+  return {
+    props:{
+      products: products.map(db.convertDocToObj),
+      products1: products1.map(db.convertDocToObj),
+    },
+  };
+}
 
 {/*import Head from 'next/head'
 import Image from 'next/image'
