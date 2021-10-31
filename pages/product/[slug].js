@@ -23,7 +23,7 @@ import { useRouter } from 'next/router';
 
 export default function ProductScreen(props) {
   const router = useRouter ();
-  const { dispatch } = useContext ( Store );
+  const { state, dispatch } = useContext ( Store );
   const { product } = props;
   const classes = useStyles();
   if (!product) {
@@ -35,7 +35,13 @@ export default function ProductScreen(props) {
       window.alert ('Maaf. Produk Telah Habis');
       return;
     }
-    dispatch({ type: 'CART_ADD_ITEM', payload: { ...product, quantity: 1} });
+    const existItem = state.cart.cartItems.find(x=>x._id === product._id);
+    const quantity = existItem ? existItem.quantity + 1 : 1;
+    if(data.countInStock < quantity) {
+      window.alert ('Maaf. Produk Telah Habis');
+      return;
+    }
+    dispatch({ type: 'CART_ADD_ITEM', payload: { ...product, quantity} });
     router.push('/cart');
   };
 

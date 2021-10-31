@@ -11,9 +11,9 @@ import {
 } from "@material-ui/core";
 import NextLink from 'next/link';
 import Layout from "../components/Layout";
+import Product from "../models/Product";
 import data from '../utils/data';
 import db from "../utils/db";
-import Product from "../models/Product";
 
 export default function bungapapan() {
   return (
@@ -72,11 +72,11 @@ export default function bungapapan() {
 
 export async function getServerSideProps() {
   await db.connect();
-  const products = await Product.find({}).lean();
+  const products1 = await Product.find({}).lean();
   await db.disconnect();
   return {
     props:{
-      products: products.map(db.convertDocToObj),
+      products1: products1.map(db.convertDocToObj),
     },
   };
 }

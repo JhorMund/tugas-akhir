@@ -37,7 +37,7 @@ function CartScreen() {
       return;
     }
     dispatch({ type: 'CART_ADD_ITEM', payload: { ...item, quantity} })
-  }
+  };
   const removeItemHandler = (item) => {
     dispatch({type:'CART_REMOVE_ITEM', payload: item});
   };

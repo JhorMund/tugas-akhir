@@ -30,20 +30,20 @@ function CartScreen() {
   const { 
     cart: { cartItems }, 
   } = state;
-  const updateCartHandler = async (item, quantity) => {
-    const { data } = await axios.get(`/api/products/${item._id}`);
+  const updateCartHandler1 = async (item, quantity) => {
+    const { data } = await axios.get(`/api/products2/${item._id}`);
     if(data.countInStock < quantity) {
       window.alert ('Maaf. Produk Telah Habis');
       return;
     }
     dispatch({ type: 'CART_ADD_ITEM', payload: { ...item, quantity} })
-  }
-  const removeItemHandler = (item) => {
+  };
+  const removeItemHandler1 = (item) => {
     dispatch({type:'CART_REMOVE_ITEM', payload: item});
   };
-  const checkoutHandler = () => {
+  const checkoutHandler1 = () => {
     router.push('/shipping');
-  }
+  };
   return (
     <Layout title="keranjang Belanja">
       <Typography component="h1" variant="h1">
@@ -84,7 +84,7 @@ function CartScreen() {
                   {cartItems.map((item) => (
                     <TableRow key={item._id}>
                       <TableCell>
-                        <NextLink href={`/product/${item.slug}`} passHref>
+                        <NextLink href={`/product2/${item.pid}`} passHref>
                           <Link>
                             <Image 
                               src={item.image}
@@ -97,7 +97,7 @@ function CartScreen() {
                         </NextLink>
                       </TableCell>
                       <TableCell>
-                        <NextLink href={`/product/${item.slug}`} passHref>
+                        <NextLink href={`/product2/${item.pid}`} passHref>
                           <Link>
                             <Typography>{item.name}</Typography>
                           </Link>
@@ -107,7 +107,7 @@ function CartScreen() {
                         <Select 
                         value={item.quantity} 
                         onChange= {(e) => 
-                        updateCartHandler(item, e.target.value)
+                        updateCartHandler1(item, e.target.value)
                       }
                         >
                           {[...Array(item.countInStock).keys()].map((x) => (
@@ -124,7 +124,7 @@ function CartScreen() {
                         <Button
                           variant="contained" 
                           color='secondary'
-                          onClick={()=> removeItemHandler(item)}
+                          onClick={()=> removeItemHandler1(item)}
                         >
                           x
                         </Button>
@@ -147,7 +147,7 @@ function CartScreen() {
                 </ListItem>
                 <ListItem>
                   <Button
-                    onClick={checkoutHandler}
+                    onClick={checkoutHandler1}
                     variant="contained" 
                     color="primary"
                     fullWidth

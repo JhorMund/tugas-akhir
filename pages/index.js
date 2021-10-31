@@ -14,10 +14,38 @@ import Layout from "../components/Layout";
 import db from "../utils/db";
 import Product from "../models/Product";
 import Product2 from "../models/Product2";
+import axios from "axios";
+import { useRouter } from "next/router";
+import { useContext } from "react";
+import { Store } from "../utils/Store";
 
 export default function Home(props) {
+  const router = useRouter ();
+  const { state, dispatch } = useContext ( Store );
   const { products } = props;
+  const addToCartHandler = async (product) => {
+    const existItem = state.cart.cartItems.find(x=>x._id === product._id);
+    const quantity = existItem ? existItem.quantity + 1 : 1;
+    const { data } = await axios.get(`/api/products/${product._id}`);
+    if(data.countInStock < quantity) {
+      window.alert ('Maaf. Produk Telah Habis');
+      return;
+    }
+    dispatch({ type: 'CART_ADD_ITEM', payload: { ...product, quantity} });
+    router.push('/cart');
+  };
   const { products1 } = props;
+  const addToCartHandler1 = async (product0) => {
+    const { data } = await axios.get(`/api/products2/${product0._id}`);
+    if(data.countInStock <= 0) {
+      window.alert ('Maaf. Produk Telah Habis');
+      return;
+    }
+    const existItem = state.cart.cartItems.find(x=>x._id === product0._id);
+    const quantity = existItem ? existItem.quantity + 1 : 1;
+    dispatch({ type: 'CART_ADD_ITEM', payload: { ...product0, quantity} });
+    router.push('/cart');
+  };
   return (
     <Layout>
       <div>
@@ -52,6 +80,7 @@ export default function Home(props) {
                     size="small" 
                     color="primary"
                     variant="contained"
+                    onClick={() => addToCartHandler(product)}
                   >
                     Add To Cart
                   </Button>
@@ -91,6 +120,7 @@ export default function Home(props) {
                     size="small" 
                     color="primary"
                     variant="contained"
+                    onClick={() => addToCartHandler1(product0)}
                   >
                     Add To Cart
                   </Button>
